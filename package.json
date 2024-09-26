@@ -1,0 +1,14 @@
+{
+  "name": "dev-tinder-be",
+  "version": "1.0.0",
+  "description": "Tinder for devs",
+  "main": "index.js",
+  "scripts": {
+    "start-server": "nodemon src/app.js"
+  },
+  "author": "Abinash Shasini",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
