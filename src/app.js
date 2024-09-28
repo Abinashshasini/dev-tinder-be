@@ -1,15 +1,35 @@
 const express = require('express');
+const handleConnectdB = require('./config/database');
+const User = require('./models/user');
 
+/** Init express APP */
 const app = express();
+const PORT = 7777 || 3000;
 
-app.use('/test', (req, res) => {
-  res.send('Hello from the server');
+app.post('/signup', async (req, res) => {
+  const userObj = {
+    firstName: 'Abinash',
+    lastName: 'Shasini',
+    password: ' Baklol',
+    age: 25,
+    gender: 'male',
+    bio: "i'm a baklol",
+  };
+
+  const user = new User(userObj);
+  const response = await user.save();
+  if (response) {
+    res.send('User signup success fully');
+  }
 });
 
-app.use('/dashboard', (req, res) => {
-    res.send('Hello from the dashboard');
+/** Connect to dB and start server */
+handleConnectdB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server started running on prot:- ${PORT}`);
+    });
+  })
+  .catch(() => {
+    throw new Error("DataBase can't be connected");
   });
-
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
-});
