@@ -1,7 +1,7 @@
 const express = require('express');
 const handleConnectdB = require('./config/database');
 const cors = require('cors');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const User = require('./models/user');
 
 /** Init express APP */
@@ -23,22 +23,35 @@ app.use(express.static('public'));
 app.use(cookieParser());
 
 app.post('/signup', async (req, res) => {
+  const user = new User(req.body);
   try {
-    const user = new User({
-      firstName: 'Abinash',
-      lastName: 'Shasini',
-      password: 'Baklol',
-      age: 25,
-      gender: 'male',
-      bio: "I'm a baklol",
-    });
-    console.log('user', user);
-
     await user.save();
     res.status(201).send('User signup successful');
   } catch (error) {
     console.error('Error saving user:', error);
     res.status(500).send('Error signing up user');
+  }
+});
+
+app.get('/user', async (req, res) => {
+  const emailId = req.body.emailId;
+  console.log('emailId: ', emailId);
+
+  try {
+    const user = await User.findOne({ emailId: emailId });
+    console.log('user: ', user);
+    res.send(user);
+  } catch (error) {
+    res.status(500).send('Error finding the user');
+  }
+});
+
+app.get('/feed', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.send(users);
+  } catch (error) {
+    res.status(500).send('Error finding the user');
   }
 });
 
