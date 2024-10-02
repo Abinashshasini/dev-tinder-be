@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { handleValidateSignupData } = require('../utils/validation.js');
 const User = require('../models/user');
@@ -82,19 +83,19 @@ const handleLoginUser = asyncHandler(async (req, res) => {
     throw new ApiError(404, 'Invalid user credentials');
   }
 
+  const token = await jwt.sign({ _id: user._id }, process.env.SECRET_KEY);
+
   const loggedInUser = await User.findOne(user._id).select('-password');
 
   return res
     .status(200)
-    .cookie('accessToken', 'accessToken', cookiesOptions)
-    .cookie('refreshToken', 'refreshToken', cookiesOptions)
+    .cookie('token', token, cookiesOptions)
     .json(
       new ApiResponse(
         200,
         {
           user: loggedInUser,
-          accessToken: '',
-          refreshToken: '',
+          token: token,
         },
         'User logged in Successfully'
       )
