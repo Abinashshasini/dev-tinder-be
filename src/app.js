@@ -5,6 +5,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { ApiError } = require('./utils/apiError.js');
 const User = require('./models/user');
+const { handleValidateAuthenticateUser } = require('./middlewares/auth.js');
 
 /** Init express APP */
 const app = express();
@@ -32,26 +33,9 @@ const userRouter = require('./routes/user.routes.js');
  */
 app.use('/api/v1/users', userRouter);
 
-app.get('/profile', async (req, res) => {
+app.get('/profile', handleValidateAuthenticateUser, async (req, res) => {
   try {
-    const cookies = req.cookies;
-    const { token } = cookies;
-    if (!token) {
-      throw new Error('token not available');
-    }
-    const decodedMessage = await jwt.verify(token, process.env.SECRET_KEY);
-    console.log('decodedMessage: ', decodedMessage);
-    const { _id } = decodedMessage;
-    console.log('_id: ', _id);
-
-    const user = await User.findById(_id);
-    console.log('user: ', user);
-
-    if (!user) {
-      throw new Error('token not available');
-    }
-
-    res.send(user);
+    res.send(res.user);
   } catch (err) {
     res.status(404).send(`Something went worng ${err}`);
   }

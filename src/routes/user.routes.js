@@ -3,6 +3,7 @@ const {
   handleLoginUser,
   handleSignupUser,
 } = require('../controllers/user.controller.js');
+const { handleValidateAuthenticateUser } = require('../middlewares/auth.js');
 
 const router = Router();
 

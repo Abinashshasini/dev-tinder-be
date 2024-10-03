@@ -83,7 +83,7 @@ const handleLoginUser = asyncHandler(async (req, res) => {
     throw new ApiError(404, 'Invalid user credentials');
   }
 
-  const token = await jwt.sign({ _id: user._id }, process.env.SECRET_KEY);
+  const token = await user.getJWT();
 
   const loggedInUser = await User.findOne(user._id).select('-password');
 
