@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const validator = require('validator');
-const jwt = require('jsonwebtoken');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { handleValidateSignupData } = require('../utils/validation.js');
 const User = require('../models/user');
@@ -102,7 +101,18 @@ const handleLoginUser = asyncHandler(async (req, res) => {
     );
 });
 
+const handleLogoutUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .cookie('token', null, {
+      ...cookiesOptions,
+      expires: new Date(Date.now()),
+    })
+    .json(new ApiResponse(200, {}, 'User logged out successfully'));
+});
+
 module.exports = {
   handleSignupUser,
   handleLoginUser,
+  handleLogoutUser,
 };
