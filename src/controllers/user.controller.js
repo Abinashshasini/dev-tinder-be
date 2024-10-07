@@ -101,6 +101,10 @@ const handleLoginUser = asyncHandler(async (req, res) => {
     );
 });
 
+/*
+ * STEPS
+ * 1. Just clear user cookies.
+ */
 const handleLogoutUser = asyncHandler(async (req, res) => {
   return res
     .status(200)

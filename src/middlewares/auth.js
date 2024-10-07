@@ -25,7 +25,7 @@ const handleValidateAuthenticateUser = asyncHandler(async (req, res, next) => {
   if (!user) {
     throw new Error('User not found');
   }
-  res.user = user;
+  req.user = user;
   next();
 });
 
