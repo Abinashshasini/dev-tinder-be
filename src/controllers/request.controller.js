@@ -18,6 +18,12 @@ const handleLikeOrPass = asyncHandler(async (req, res) => {
   const fromUserId = req.user._id;
   const toUserId = req.params.toUserId;
   const status = req.params.status;
+  const allowedStatus = ['ignored', 'intrested'];
+  if (!allowedStatus.includes(status)) {
+    return res
+      .status(401)
+      .json(new ApiResponse(401, {}, `Invalid status type ${status}`));
+  }
 
   const connectionRequest = new ConnectionRequest({
     fromUserId,
